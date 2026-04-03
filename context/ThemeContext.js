@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Appearance } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const THEME_KEY = '@theme_preference';
@@ -55,7 +55,7 @@ export const darkColors = {
 const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
-  const systemScheme = useColorScheme();
+  const systemScheme = useColorScheme() ?? Appearance.getColorScheme() ?? 'light';
   const [themeMode, setThemeModeState] = useState('system');
 
   useEffect(() => {
