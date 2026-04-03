@@ -6,16 +6,16 @@ import {
   TextInput,
   ActivityIndicator,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useMovie } from '../hooks/useMovie';
 import MovieItem from '../components/MovieItem';
 import { useSession } from '../context/SessionContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function MoviesScreen() {
-  const { session, signOut } = useSession();
+  const { session } = useSession();
+  const { colors } = useTheme();
   const userName = session?.user?.user_metadata?.full_name || session?.user?.email;
   const {
     movies,
@@ -33,35 +33,30 @@ export default function MoviesScreen() {
     if (!loadingMore) return null;
     return (
       <View style={styles.footer}>
-        <ActivityIndicator size="small" color="white" />
+        <ActivityIndicator size="small" color={colors.textOnBackground} />
       </View>
     );
   };
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Nenhum filme encontrado.</Text>
+      <Text style={[styles.emptyText, { color: colors.textOnBackground }]}>Nenhum filme encontrado.</Text>
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <Text style={styles.headerTitle}>Catálogo de Filmes</Text>
-          <TouchableOpacity onPress={signOut} style={styles.logoutButton}>
-            <MaterialIcons name="logout" size={22} color="white" />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.headerSubtitle}>
+        <Text style={[styles.headerTitle, { color: colors.textOnBackground }]}>Catálogo de Filmes</Text>
+        <Text style={[styles.headerSubtitle, { color: colors.textSubtle }]}>
           Olá, {userName}!
         </Text>
       </View>
 
       <TextInput
-        style={styles.searchInput}
+        style={[styles.searchInput, { backgroundColor: colors.surface, color: colors.inputText, shadowColor: colors.shadow }]}
         placeholder="Buscar filmes..."
-        placeholderTextColor="#aaa"
+        placeholderTextColor={colors.placeholder}
         value={searchQuery}
         onChangeText={setSearchQuery}
         clearButtonMode="while-editing"
@@ -70,11 +65,11 @@ export default function MoviesScreen() {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="white" />
+          <ActivityIndicator size="large" color={colors.textOnBackground} />
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={[styles.errorText, { color: colors.textOnBackground }]}>{error}</Text>
         </View>
       ) : (
         <FlatList
@@ -101,42 +96,28 @@ export default function MoviesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0081f1',
   },
   header: {
     paddingTop: 20,
     paddingBottom: 20,
     paddingHorizontal: 20,
   },
-  headerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
   headerTitle: {
-    color: 'white',
     fontSize: 28,
     fontWeight: 'bold',
-  },
-  logoutButton: {
-    padding: 6,
+    marginBottom: 4,
   },
   headerSubtitle: {
-    color: 'rgba(255,255,255,0.85)',
     fontSize: 15,
   },
   searchInput: {
-    backgroundColor: 'white',
     marginHorizontal: 20,
     marginBottom: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 10,
     fontSize: 16,
-    color: '#333',
     elevation: 3,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -156,7 +137,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   errorText: {
-    color: 'white',
     fontSize: 16,
     textAlign: 'center',
   },
@@ -172,7 +152,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: 'white',
   },
   flatListEmpty: {
     flexGrow: 1,

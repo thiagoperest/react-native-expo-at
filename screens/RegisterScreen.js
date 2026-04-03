@@ -14,9 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import isEmail from 'validator/lib/isEmail';
 import { useSession } from '../context/SessionContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function RegisterScreen({ navigation }) {
   const { signUp } = useSession();
+  const { colors } = useTheme();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -62,7 +64,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -72,43 +74,43 @@ export default function RegisterScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.iconWrapper}>
-            <MaterialIcons name="person-add" size={64} color="white" />
+            <MaterialIcons name="person-add" size={64} color={colors.textOnBackground} />
           </View>
 
-          <Text style={styles.title}>Criar Conta</Text>
-          <Text style={styles.subtitle}>Cadastre-se para acessar o catálogo</Text>
+          <Text style={[styles.title, { color: colors.textOnBackground }]}>Criar Conta</Text>
+          <Text style={[styles.subtitle, { color: colors.textSubtle }]}>Cadastre-se para acessar o catálogo</Text>
 
-          <View style={styles.card}>
+          <View style={[styles.card, { backgroundColor: colors.surface, shadowColor: colors.shadow }]}>
             {error ? (
-              <View style={styles.errorBox}>
-                <MaterialIcons name="error-outline" size={18} color="#c0392b" />
-                <Text style={styles.errorText}>{error}</Text>
+              <View style={[styles.errorBox, { backgroundColor: colors.errorBg }]}>
+                <MaterialIcons name="error-outline" size={18} color={colors.error} />
+                <Text style={[styles.errorText, { color: colors.error }]}>{error}</Text>
               </View>
             ) : null}
 
             {success ? (
-              <View style={styles.successBox}>
-                <MaterialIcons name="check-circle" size={18} color="#27ae60" />
-                <Text style={styles.successText}>Conta criada! Redirecionando...</Text>
+              <View style={[styles.successBox, { backgroundColor: colors.successBg }]}>
+                <MaterialIcons name="check-circle" size={18} color={colors.success} />
+                <Text style={[styles.successText, { color: colors.success }]}>Conta criada! Redirecionando...</Text>
               </View>
             ) : null}
 
-            <Text style={styles.label}>Nome completo</Text>
+            <Text style={[styles.label, { color: colors.label }]}>Nome completo</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.surfaceVariant, borderColor: colors.border, color: colors.inputText }]}
               placeholder="Seu nome"
-              placeholderTextColor="#aaa"
+              placeholderTextColor={colors.placeholder}
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
               autoCorrect={false}
             />
 
-            <Text style={styles.label}>E-mail</Text>
+            <Text style={[styles.label, { color: colors.label }]}>E-mail</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.surfaceVariant, borderColor: colors.border, color: colors.inputText }]}
               placeholder="seu@email.com"
-              placeholderTextColor="#aaa"
+              placeholderTextColor={colors.placeholder}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -116,12 +118,12 @@ export default function RegisterScreen({ navigation }) {
               autoCorrect={false}
             />
 
-            <Text style={styles.label}>Senha</Text>
-            <View style={styles.passwordWrapper}>
+            <Text style={[styles.label, { color: colors.label }]}>Senha</Text>
+            <View style={[styles.passwordWrapper, { backgroundColor: colors.surfaceVariant, borderColor: colors.border }]}>
               <TextInput
-                style={styles.passwordInput}
+                style={[styles.passwordInput, { color: colors.inputText }]}
                 placeholder="Mínimo 6 caracteres"
-                placeholderTextColor="#aaa"
+                placeholderTextColor={colors.placeholder}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -134,17 +136,17 @@ export default function RegisterScreen({ navigation }) {
                 <MaterialIcons
                   name={showPassword ? 'visibility-off' : 'visibility'}
                   size={22}
-                  color="#888"
+                  color={colors.textSecondary}
                 />
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.label}>Confirmar Senha</Text>
-            <View style={styles.passwordWrapper}>
+            <Text style={[styles.label, { color: colors.label }]}>Confirmar Senha</Text>
+            <View style={[styles.passwordWrapper, { backgroundColor: colors.surfaceVariant, borderColor: colors.border }]}>
               <TextInput
-                style={styles.passwordInput}
+                style={[styles.passwordInput, { color: colors.inputText }]}
                 placeholder="Repita a senha"
-                placeholderTextColor="#aaa"
+                placeholderTextColor={colors.placeholder}
                 value={confirm}
                 onChangeText={setConfirm}
                 secureTextEntry={!showConfirm}
@@ -157,13 +159,13 @@ export default function RegisterScreen({ navigation }) {
                 <MaterialIcons
                   name={showConfirm ? 'visibility-off' : 'visibility'}
                   size={22}
-                  color="#888"
+                  color={colors.textSecondary}
                 />
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity
-              style={[styles.button, (loading || success) && styles.buttonDisabled]}
+              style={[styles.button, { backgroundColor: colors.primary }, (loading || success) && styles.buttonDisabled]}
               onPress={handleRegister}
               disabled={loading || success}
             >
@@ -178,9 +180,9 @@ export default function RegisterScreen({ navigation }) {
               style={styles.linkButton}
               onPress={() => navigation.navigate('Login')}
             >
-              <Text style={styles.linkText}>
+              <Text style={[styles.linkText, { color: colors.textSecondary }]}>
                 Já tem uma conta?{' '}
-                <Text style={styles.linkHighlight}>Entrar</Text>
+                <Text style={[styles.linkHighlight, { color: colors.primary }]}>Entrar</Text>
               </Text>
             </TouchableOpacity>
           </View>
@@ -193,7 +195,6 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#0081f1',
   },
   flex: {
     flex: 1,
@@ -210,20 +211,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: 'white',
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255,255,255,0.85)',
     marginBottom: 32,
   },
   card: {
-    backgroundColor: 'white',
     borderRadius: 16,
     padding: 24,
     width: '100%',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
@@ -232,55 +229,45 @@ const styles = StyleSheet.create({
   errorBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fdecea',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     gap: 8,
   },
   errorText: {
-    color: '#c0392b',
     fontSize: 14,
     flex: 1,
   },
   successBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eafaf1',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     gap: 8,
   },
   successText: {
-    color: '#27ae60',
     fontSize: 14,
     flex: 1,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,
-    color: '#222',
     marginBottom: 16,
-    backgroundColor: '#fafafa',
   },
   passwordWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
     borderRadius: 10,
-    backgroundColor: '#fafafa',
     marginBottom: 16,
   },
   passwordInput: {
@@ -288,13 +275,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,
-    color: '#222',
   },
   eyeButton: {
     paddingHorizontal: 14,
   },
   button: {
-    backgroundColor: '#0081f1',
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
@@ -313,11 +298,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#4d4c4c',
     fontSize: 14,
   },
   linkHighlight: {
-    color: '#0081f1',
     fontWeight: '600',
   },
 });
