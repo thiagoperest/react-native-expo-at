@@ -6,12 +6,17 @@ import {
   TextInput,
   ActivityIndicator,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useMovie } from '../hooks/useMovie';
 import MovieItem from '../components/MovieItem';
+import { useSession } from '../context/SessionContext';
 
 export default function MoviesScreen() {
+  const { session, signOut } = useSession();
+  const userName = session?.user?.user_metadata?.full_name || session?.user?.email;
   const {
     movies,
     loading,
@@ -42,8 +47,15 @@ export default function MoviesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Catalogo de Filmes</Text>
-        <Text style={styles.headerSubtitle}>Escolha um filme:</Text>
+        <View style={styles.headerTop}>
+          <Text style={styles.headerTitle}>Catálogo de Filmes</Text>
+          <TouchableOpacity onPress={signOut} style={styles.logoutButton}>
+            <MaterialIcons name="logout" size={22} color="white" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.headerSubtitle}>
+          Olá, {userName}!
+        </Text>
       </View>
 
       <TextInput
@@ -92,21 +104,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#0081f1',
   },
   header: {
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 20,
     paddingHorizontal: 20,
   },
-  headerTitle: {
-    color: 'white',
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  headerTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 6,
   },
-  headerSubtitle: {
+  headerTitle: {
     color: 'white',
-    fontSize: 18,
-    textAlign: 'center',
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    padding: 6,
+  },
+  headerSubtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 15,
   },
   searchInput: {
     backgroundColor: 'white',

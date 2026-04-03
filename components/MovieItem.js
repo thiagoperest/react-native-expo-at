@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   year: {
-    color: '#666',
+    color: '#4d4c4c',
     fontSize: 14,
   },
 });

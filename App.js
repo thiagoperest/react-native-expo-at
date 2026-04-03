@@ -1,10 +1,16 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import MoviesScreen from './screens/MoviesScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { SessionProvider } from './context/SessionContext';
+import AppNavigator from './navigation/AppNavigator';
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <MoviesScreen />
+      <SessionProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </SessionProvider>
     </SafeAreaProvider>
   );
 }
