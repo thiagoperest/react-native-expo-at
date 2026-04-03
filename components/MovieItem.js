@@ -1,10 +1,26 @@
-import { memo } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { memo, useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
+import { isFavorite, addFavorite, removeFavorite } from '../services/database';
 
-function MovieItem({ movie }) {
+function MovieItem({ movie, refreshKey }) {
   const { colors } = useTheme();
   const year = 1980 + (movie.id % 43);
+  const [favorited, setFavorited] = useState(false);
+
+  useEffect(() => {
+    isFavorite(movie.id).then(setFavorited);
+  }, [movie.id, refreshKey]);
+
+  const toggleFavorite = async () => {
+    if (favorited) {
+      await removeFavorite(movie.id);
+    } else {
+      await addFavorite(movie);
+    }
+    setFavorited((v) => !v);
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface, shadowColor: colors.shadow }]}>
@@ -18,6 +34,13 @@ function MovieItem({ movie }) {
         </Text>
         <Text style={[styles.year, { color: colors.textSecondary }]}>{year}</Text>
       </View>
+      <TouchableOpacity onPress={toggleFavorite} style={styles.heartButton} activeOpacity={0.7}>
+        <MaterialIcons
+          name={favorited ? 'favorite' : 'favorite-border'}
+          size={24}
+          color={favorited ? '#e74c3c' : colors.textSecondary}
+        />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -56,5 +79,8 @@ const styles = StyleSheet.create({
   },
   year: {
     fontSize: 14,
+  },
+  heartButton: {
+    padding: 4,
   },
 });

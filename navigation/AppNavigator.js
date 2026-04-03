@@ -7,6 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import MoviesScreen from '../screens/MoviesScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +32,16 @@ function AuthenticatedTabs() {
           tabBarLabel: 'Catálogo',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="movie" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          tabBarLabel: 'Favoritos',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="favorite" color={color} size={size} />
           ),
         }}
       />

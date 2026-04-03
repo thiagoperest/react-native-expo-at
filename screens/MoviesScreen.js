@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMovie } from '../hooks/useMovie';
 import MovieItem from '../components/MovieItem';
 import { useSession } from '../context/SessionContext';
@@ -17,6 +18,13 @@ export default function MoviesScreen() {
   const { session } = useSession();
   const { colors } = useTheme();
   const userName = session?.user?.user_metadata?.full_name || session?.user?.email;
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshKey((k) => k + 1);
+    }, [])
+  );
   const {
     movies,
     loading,
@@ -27,7 +35,10 @@ export default function MoviesScreen() {
     loadMore,
   } = useMovie();
 
-  const renderItem = useCallback(({ item }) => <MovieItem movie={item} />, []);
+  const renderItem = useCallback(
+    ({ item }) => <MovieItem movie={item} refreshKey={refreshKey} />,
+    [refreshKey]
+  );
 
   const renderFooter = () => {
     if (!loadingMore) return null;

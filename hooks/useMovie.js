@@ -43,8 +43,8 @@ export function useMovie() {
       } else {
         setMovies(data);
       }
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError('Não foi possível carregar os filmes.\nTente novamente mais tarde!');
     } finally {
       setLoading(false);
       setLoadingMore(false);
